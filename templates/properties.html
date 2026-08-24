@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EstateIQ AI — Find Properties</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h2>EstateIQ AI</h2>
+        <div>
+            <a href="/">Home Price Predictor</a>
+            <a href="/properties">Find Properties</a>
+            <a href="/assistant">AI Assistant</a>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Find Your Perfect Property</h1>
+        <div class="search-box">
+            <input type="text" id="query" placeholder="Describe desire: e.g., 3BHK near metro with parking under 90 lakh">
+            <input type="number" id="max_price" placeholder="Max Budget (INR)">
+            <input type="number" id="bedrooms" placeholder="Bedrooms">
+            <button onclick="searchProperties()">Search Properties</button>
+        </div>
+        <div id="results" class="property-grid"></div>
+    </div>
+    <script src="/static/app.js"></script>
+</body>
+</html>

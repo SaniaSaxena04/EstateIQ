@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EstateIQ — House Price Predictor</title>
+<meta name="description" content="AI-powered house price predictions, backed by machine learning on real housing data." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+<!-- ============================== NAVBAR ============================== -->
+<nav class="navbar" id="navbar">
+  <a href="{{ url_for('home') }}" class="nav-logo">🏡 EstateIQ </a>
+
+  <ul class="nav-links">
+    <li><a href="{{ url_for('home') }}">Home</a></li>
+    <li><a href="#predict">Predict</a></li>
+    <li><a href="{{ url_for('properties_page') }}">Properties</a></li>
+    <li><a href="{{ url_for('assistant_page') }}">AI Assistant</a></li>
+    <li><a href="#how-it-works">How It Works</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+
+  <div class="nav-right">
+    <div class="nav-user">
+      <span class="avatar">{{ username[0]|upper if username else "U" }}</span>
+      <span class="username-text">👋 {{ username }}</span>
+    </div>
+    <a href="{{ url_for('logout') }}" class="nav-logout">Logout</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+      <span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="{{ url_for('home') }}">Home</a>
+  <a href="#predict">Predict</a>
+  <a href="{{ url_for('properties_page') }}">Properties</a>
+  <a href="{{ url_for('assistant_page') }}">AI Assistant</a>
+  <a href="#how-it-works">How It Works</a>
+  <a href="#about">About</a>
+</div>
+
+<!-- ============================== HERO ============================== -->
+<section class="hero" id="home">
+  <div class="hero-bg">
+    <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1800&q=80"
+         alt="Modern California luxury house with pool at dusk" loading="eager" />
+  </div>
+  <div class="hero-overlay"></div>
+
+  <div class="container">
+    <div class="hero-content">
+      <span class="eyebrow">AI-Powered Real Estate</span>
+      <h1>Predict Your Home Value With AI</h1>
+      <p>Discover intelligent property price estimates powered by machine learning and California housing data.</p>
+
+      <div class="hero-actions">
+        <a href="#predict" class="btn btn-primary">Predict My Home →</a>
+        <a href="{{ url_for('properties_page') }}" class="btn btn-ghost">Explore Properties</a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-card">
+          <div class="stat-num">20K+</div>
+          <div class="stat-label">Properties Analyzed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">AI</div>
+          <div class="stat-label">Powered Predictions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">&lt; 5 sec</div>
+          <div class="stat-label">Instant Estimates</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-mini-card">
+      <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=600&q=80"
+           alt="Modern California villa" loading="lazy" />
+      <div class="mini-body">
+        <span class="mini-tag">Modern California Villa</span>
+        <h4>AI Estimated Value</h4>
+        <div class="mini-price">$742,500</div>
+        <div class="mini-demo">Demo estimate for illustration only</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== PROPERTY DISCOVERY ============================== -->
+<section class="properties reveal" id="properties">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Property Discovery</span>
+      <h2>Explore California Properties</h2>
+      <p>A glimpse into the kind of homes AI-driven valuation helps you understand — browse a few sample listings below.</p>
+    </div>
+
+    <div class="property-grid">
+      <article class="property-card">
+        <div class="property-media">
+          <img src="https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=800&q=80"
+               alt="Modern hillside villa in California" loading="lazy" />
+          <button class="property-heart" aria-label="Save property">🤍</button>
+          <span class="property-loc">California</span>
+        </div>
+        <div class="property-body">
+          <h3>Modern Hillside Villa</h3>
+          <div class="property-price">$1.24M</div>
+          <div class="property-tags"><span>4 bd</span><span>3 ba</span><span>Hillside</span></div>
+          <div class="property-foot">
+            <span class="property-demo-note">Demo property</span>
+            <a href="{{ url_for('properties_page') }}" class="property-arrow">→</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="property-card">
+        <div class="property-media">
+          <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=800&q=80"
+               alt="Contemporary family home in the San Francisco Bay Area" loading="lazy" />
+          <button class="property-heart" aria-label="Save property">🤍</button>
+          <span class="property-loc">San Francisco Bay Area</span>
+        </div>
+        <div class="property-body">
+          <h3>Contemporary Family Home</h3>
+          <div class="property-price">$895K</div>
+          <div class="property-tags"><span>3 bd</span><span>2 ba</span><span>Garden</span></div>
+          <div class="property-foot">
+            <span class="property-demo-note">Demo property</span>
+            <a href="{{ url_for('properties_page') }}" class="property-arrow">→</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="property-card">
+        <div class="property-media">
+          <img src="https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=800&q=80"
+               alt="Modern suburban home in Los Angeles" loading="lazy" />
+          <button class="property-heart" aria-label="Save property">🤍</button>
+          <span class="property-loc">Los Angeles</span>
+        </div>
+        <div class="property-body">
+          <h3>Modern Suburban Home</h3>
+          <div class="property-price">$742K</div>
+          <div class="property-tags"><span>3 bd</span><span>2 ba</span><span>Corner lot</span></div>
+          <div class="property-foot">
+            <span class="property-demo-note">Demo property</span>
+            <a href="{{ url_for('properties_page') }}" class="property-arrow">→</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="property-card">
+        <div class="property-media">
+          <img src="https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=800&q=80"
+               alt="Luxury urban residence in San Diego" loading="lazy" />
+          <button class="property-heart" aria-label="Save property">🤍</button>
+          <span class="property-loc">San Diego</span>
+        </div>
+        <div class="property-body">
+          <h3>Luxury Urban Residence</h3>
+          <div class="property-price">$1.05M</div>
+          <div class="property-tags"><span>4 bd</span><span>3 ba</span><span>City view</span></div>
+          <div class="property-foot">
+            <span class="property-demo-note">Demo property</span>
+            <a href="{{ url_for('properties_page') }}" class="property-arrow">→</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== PREDICTION SECTION ============================== -->
+<section class="predict-section reveal" id="predict">
+  <div class="container">
+    <div class="predict-grid">
+
+      <div class="predict-visual">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80"
+             alt="Luxury living room interior" loading="lazy" />
+        <div class="predict-overlay-card">
+          <h4>AI Property Analysis</h4>
+          <div class="predict-overlay-tags">
+            <span>8 Core Features</span>
+            <span>Machine Learning</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="predict-form-panel">
+        <span class="eyebrow">AI Property Price Predictor</span>
+        <h2>Estimate any California property's value</h2>
+        <p>Enter property information and let our machine learning model estimate the property's value.</p>
+
+        <form action="/predict" method="POST" novalidate>
+          <div class="form-grid">
+            <div class="field">
+              <label for="MedInc"><span class="icon">💰</span> Median Income</label>
+              <span class="hint">Median household income in tens of thousands</span>
+              <input type="number" step="any" id="MedInc" name="MedInc" required />
+            </div>
+
+            <div class="field">
+              <label for="HouseAge"><span class="icon">🏗️</span> House Age</label>
+              <span class="hint">Age of the property, in years</span>
+              <input type="number" step="any" id="HouseAge" name="HouseAge" required />
+            </div>
+
+            <div class="field">
+              <label for="AveRooms"><span class="icon">🚪</span> Average Rooms</label>
+              <span class="hint">Average number of rooms per household</span>
+              <input type="number" step="any" id="AveRooms" name="AveRooms" required />
+            </div>
+
+            <div class="field">
+              <label for="AveBedrms"><span class="icon">🛏️</span> Average Bedrooms</label>
+              <span class="hint">Average number of bedrooms per household</span>
+              <input type="number" step="any" id="AveBedrms" name="AveBedrms" required />
+            </div>
+
+            <div class="field">
+              <label for="Population"><span class="icon">👥</span> Population</label>
+              <span class="hint">Total population in the surrounding block</span>
+              <input type="number" step="any" id="Population" name="Population" required />
+            </div>
+
+            <div class="field">
+              <label for="AveOccup"><span class="icon">🏠</span> Average Occupants</label>
+              <span class="hint">Average number of household members</span>
+              <input type="number" step="any" id="AveOccup" name="AveOccup" required />
+            </div>
+
+            <div class="field">
+              <label for="Latitude"><span class="icon">📍</span> Latitude</label>
+              <span class="hint">Geographic latitude of the property</span>
+              <input type="number" step="any" id="Latitude" name="Latitude" required />
+            </div>
+
+            <div class="field">
+              <label for="Longitude"><span class="icon">🧭</span> Longitude</label>
+              <span class="hint">Geographic longitude of the property</span>
+              <input type="number" step="any" id="Longitude" name="Longitude" required />
+            </div>
+          </div>
+
+          <button type="submit" class="predict-submit">Predict Property Price →</button>
+          <div class="predict-powered">Powered by Machine Learning</div>
+        </form>
+
+        {% if prediction_text %}
+        <div class="result-card">
+          <div class="result-top">
+            <div class="result-icon">🏠</div>
+            <h3>AI Property Estimate</h3>
+          </div>
+          <div class="result-value">{{ prediction_text }}</div>
+          <p class="result-note">Generated from your property characteristics using the California Housing model.</p>
+          <svg class="result-chart" viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <polyline points="0,50 20,40 40,44 60,24 80,30 100,10 120,16" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================== HOW IT WORKS ============================== -->
+<section class="how-it-works reveal" id="how-it-works">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Process</span>
+      <h2>How EstateIQ Works</h2>
+      <p>Three simple steps take your property details from input to an AI-generated estimate.</p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <div class="step-icon">📝</div>
+        <h3>Enter Property Details</h3>
+        <p>Provide income, location, and property characteristics for the home you'd like estimated.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <div class="step-icon">🧠</div>
+        <h3>AI Analyzes Features</h3>
+        <p>Our machine learning model processes the data against patterns learned from California housing.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <div class="step-icon">📈</div>
+        <h3>Receive Estimated Value</h3>
+        <p>Get an instant, data-driven price estimate for the property you described.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== AI FEATURES ============================== -->
+<section class="features reveal">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Why EstateIQ</span>
+      <h2>Built for accuracy and speed</h2>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <h3>AI Powered</h3>
+        <p>Machine-learning based property prediction.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Instant Results</h3>
+        <p>Fast property value estimates.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Data Driven</h3>
+        <p>Uses multiple housing features.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔐</div>
+        <h3>Secure</h3>
+        <p>Protected user authentication.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== CALIFORNIA BANNER ============================== -->
+<section class="ca-banner reveal">
+  <img src="https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=1800&q=80"
+       alt="California coastline with luxury property" loading="lazy" />
+  <div class="ca-banner-content">
+    <h2>California Real Estate,<br />Reimagined With AI</h2>
+    <p>Turn housing data into smarter property decisions.</p>
+    <a href="#predict" class="btn btn-primary">Try AI Prediction →</a>
+  </div>
+</section>
+
+<!-- ============================== CITY SECTION ============================== -->
+<section class="cities reveal">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Coverage</span>
+      <h2>Designed for California</h2>
+      <p>Our model is tuned on housing data spanning the state's most iconic metro areas.</p>
+    </div>
+
+    <div class="city-grid">
+      <div class="city-tile">
+        <img src="https://images.unsplash.com/photo-1521464302861-ce943915d1c3?auto=format&fit=crop&w=800&q=80"
+             alt="San Francisco skyline" loading="lazy" />
+        <div class="city-tile-content">
+          <h3>San Francisco</h3>
+          <p>Dense urban value shaped by bay views and tech-driven demand.</p>
+        </div>
+      </div>
+      <div class="city-tile">
+        <img src="https://images.unsplash.com/photo-1444723121867-7a241cacace9?auto=format&fit=crop&w=800&q=80"
+             alt="Los Angeles skyline" loading="lazy" />
+        <div class="city-tile-content">
+          <h3>Los Angeles</h3>
+          <p>Sprawling neighborhoods with a wide range of property styles.</p>
+        </div>
+      </div>
+      <div class="city-tile">
+        <img src="https://images.unsplash.com/photo-1519452575417-564c1401ecc0?auto=format&fit=crop&w=800&q=80"
+             alt="San Diego coastline" loading="lazy" />
+        <div class="city-tile-content">
+          <h3>San Diego</h3>
+          <p>Coastal living with steady, sun-driven housing demand.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== ABOUT ============================== -->
+<section class="about reveal" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-image">
+        <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=80"
+             alt="Modern California home exterior" loading="lazy" />
+      </div>
+      <div class="about-text">
+        <span class="eyebrow">About</span>
+        <h2>About EstateIQ</h2>
+        <p>EstateIQ is a machine-learning based California house price prediction application. Users can securely log in, enter property characteristics, and receive an estimated property value.</p>
+        <div class="about-badges">
+          <span>AI Powered</span>
+          <span>Flask</span>
+          <span>Machine Learning</span>
+          <span>California Housing</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== FOOTER ============================== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#home" class="nav-logo">🏡 EstateIQ</a>
+        <p>AI-powered insights for smarter real estate decisions.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Navigate</h4>
+          <a href="#home">Home</a>
+          <a href="#predict">Predict</a>
+          <a href="#properties">Properties</a>
+          <a href="#how-it-works">How It Works</a>
+          <a href="#about">About</a>
+        </div>
+        <div class="footer-col">
+          <h4>Account</h4>
+          <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 EstateIQ. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+  // Navbar scroll state
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 40) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
+    }
+  });
+
+  // Mobile navigation toggle
+  const navToggle = document.getElementById('navToggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+  navToggle.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', isOpen);
+  });
+  mobileMenu.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Scroll reveal animations
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach((el) => observer.observe(el));
+</script>
+
+</body>
+</html>

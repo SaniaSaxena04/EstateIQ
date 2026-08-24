@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title> EstateIQ | Login</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+</head>
+
+<body>
+
+<div class="auth-page">
+
+    <!-- ================= LEFT IMAGE SECTION ================= -->
+
+    <section class="auth-visual">
+
+        <div class="visual-overlay"></div>
+
+        <div class="visual-content">
+
+            <div class="brand">
+                <span class="brand-icon">🏡</span>
+                <span>EstateIQ</span>
+            </div>
+
+            <div class="visual-text">
+
+                <div class="ai-badge">
+                    <span class="pulse-dot"></span>
+                    AI-POWERED REAL ESTATE
+                </div>
+
+                <h1>
+                    Smarter property
+                    <span>decisions</span>
+                    start here.
+                </h1>
+
+                <p>
+                    Estimate your property values using
+                    intelligent machine learning and real housing data.
+                </p>
+
+            </div>
+
+            <!-- Floating property card -->
+
+            <div class="floating-property-card">
+
+                <div class="property-image">
+                    <img
+                        src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=700&q=80"
+                        alt="Modern luxury house"
+                    >
+                </div>
+
+                <div class="property-info">
+
+                    <div>
+                        <span class="small-label">AI PROPERTY ESTIMATE</span>
+                        <h3>$742,500</h3>
+                    </div>
+
+                    <div class="property-icon">
+                        ✨
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Decorative stats -->
+
+            <div class="visual-stats">
+
+                <div>
+                    <strong>AI</strong>
+                    <span>Powered</span>
+                </div>
+
+                <div>
+                    <strong>8</strong>
+                    <span>Features</span>
+                </div>
+
+                <div>
+                    <strong>1</strong>
+                    <span>Smart Estimate</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= RIGHT AUTH SECTION ================= -->
+
+    <section class="auth-panel">
+
+        <div class="auth-wrapper">
+
+            <!-- Mobile Logo -->
+
+            <div class="mobile-brand">
+                🏡 <span>EstateIQ</span>
+            </div>
+
+
+            <!-- Heading -->
+
+            <div class="auth-heading">
+
+                <div class="welcome-pill">
+                    Welcome 👋
+                </div>
+
+                <h2 id="authTitle">
+                    Welcome back
+                </h2>
+
+                <p id="authSubtitle">
+                    Sign in to continue to your AI property dashboard.
+                </p>
+
+            </div>
+
+
+            <!-- Flash Messages -->
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+
+                {% if messages %}
+
+                    <div class="flash-container">
+
+                        {% for category, message in messages %}
+
+                            <div class="message {{ category }}">
+                                {{ message }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+            {% endwith %}
+
+
+            <!-- Auth Toggle -->
+
+            <div class="auth-tabs">
+
+                <button
+                    type="button"
+                    class="auth-tab active"
+                    id="loginTab"
+                    onclick="showLogin()"
+                >
+                    Login
+                </button>
+
+                <button
+                    type="button"
+                    class="auth-tab"
+                    id="signupTab"
+                    onclick="showSignup()"
+                >
+                    Create Account
+                </button>
+
+            </div>
+
+
+            <!-- ================= LOGIN FORM ================= -->
+
+            <form
+                id="loginForm"
+                class="auth-form active-form"
+                action="{{ url_for('login') }}"
+                method="POST"
+            >
+
+                <div class="form-field">
+
+                    <label for="loginEmail">
+                        Email Address
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">✉️</span>
+
+                        <input
+                            id="loginEmail"
+                            type="email"
+                            name="email"
+                            placeholder="you@example.com"
+                            autocomplete="email"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <div class="password-label-row">
+
+                        <label for="loginPassword">
+                            Password
+                        </label>
+
+                        <a href="#" class="forgot-link">
+                            Forgot password?
+                        </a>
+
+                    </div>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">🔒</span>
+
+                        <input
+                            id="loginPassword"
+                            type="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            onclick="togglePassword('loginPassword', this)"
+                            aria-label="Show password"
+                        >
+                            👁
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <label class="remember-me">
+
+                    <input
+                        type="checkbox"
+                        name="remember"
+                    >
+
+                    <span>
+                        Remember me
+                    </span>
+
+                </label>
+
+
+                <button
+                    type="submit"
+                    class="primary-auth-btn"
+                >
+                    <span>Sign In</span>
+                    <span class="btn-arrow">→</span>
+                </button>
+
+
+                <div class="secure-note">
+
+                    <span>🔐</span>
+
+                    <span>
+                        Your account is protected by secure authentication.
+                    </span>
+
+                </div>
+
+            </form>
+
+
+            <!-- ================= SIGNUP FORM ================= -->
+
+            <form
+                id="signupForm"
+                class="auth-form"
+                action="{{ url_for('signup') }}"
+                method="POST"
+            >
+
+                <div class="form-field">
+
+                    <label for="signupName">
+                        Full Name
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">👤</span>
+
+                        <input
+                            id="signupName"
+                            type="text"
+                            name="name"
+                            placeholder="Your full name"
+                            autocomplete="name"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label for="signupEmail">
+                        Email Address
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">✉️</span>
+
+                        <input
+                            id="signupEmail"
+                            type="email"
+                            name="email"
+                            placeholder="you@example.com"
+                            autocomplete="email"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label for="signupPassword">
+                        Password
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">🔒</span>
+
+                        <input
+                            id="signupPassword"
+                            type="password"
+                            name="password"
+                            placeholder="Minimum 6 characters"
+                            minlength="6"
+                            autocomplete="new-password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            onclick="togglePassword('signupPassword', this)"
+                            aria-label="Show password"
+                        >
+                            👁
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <label class="terms-check">
+
+                    <input
+                        type="checkbox"
+                        required
+                    >
+
+                    <span>
+                        I agree to the Terms & Privacy Policy.
+                    </span>
+
+                </label>
+
+
+                <button
+                    type="submit"
+                    class="primary-auth-btn"
+                >
+                    <span>Create Account</span>
+                    <span class="btn-arrow">→</span>
+                </button>
+
+            </form>
+
+
+            <!-- Footer -->
+
+            <div class="auth-footer">
+
+                <span>© 2026 EstateIQ</span>
+
+                <span class="footer-dot">•</span>
+
+                <span>AI-Powered Real Estate</span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<script>
+
+    function showLogin() {
+
+        document.getElementById("loginForm").classList.add("active-form");
+        document.getElementById("signupForm").classList.remove("active-form");
+
+        document.getElementById("loginTab").classList.add("active");
+        document.getElementById("signupTab").classList.remove("active");
+
+        document.getElementById("authTitle").textContent = "Welcome back";
+
+        document.getElementById("authSubtitle").textContent =
+            "Sign in to continue to your AI property dashboard.";
+    }
+
+
+    function showSignup() {
+
+        document.getElementById("signupForm").classList.add("active-form");
+        document.getElementById("loginForm").classList.remove("active-form");
+
+        document.getElementById("signupTab").classList.add("active");
+        document.getElementById("loginTab").classList.remove("active");
+
+        document.getElementById("authTitle").textContent = "Create your account";
+
+        document.getElementById("authSubtitle").textContent =
+            "Join HomePredict AI and discover smarter property insights.";
+    }
+
+
+    function togglePassword(inputId, button) {
+
+        const input = document.getElementById(inputId);
+
+        if (input.type === "password") {
+
+            input.type = "text";
+            button.textContent = "🙈";
+
+        } else {
+
+            input.type = "password";
+            button.textContent = "👁";
+        }
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ property.title }} — EstateIQ AI</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>{{ property.title }}</h1>
+        <p><strong>Locality:</strong> {{ property.locality }}, {{ property.city }}</p>
+        <p><strong>Listed Price:</strong> ₹{{ property.price }}</p>
+        
+        <div class="card">
+            <h3>Price Intelligence Insight</h3>
+            <p><strong>ML Estimated Market Baseline:</strong> ₹{{ property.estimated_market_price }}</p>
+            <p><strong>Price Insight:</strong> {{ property.price_insight }}</p>
+        </div>
+
+        <h3>Similar Properties</h3>
+        <button id="similar-btn" data-property-id="{{ property.property_id }}">Find Similar Properties</button>
+        <div id="similar-results" class="property-grid"></div>
+    </div>
+    <script src="/static/app.js"></script>
+    <script>
+        document.getElementById("similar-btn").addEventListener("click", function () {
+            const propId = this.getAttribute("data-property-id");
+            loadSimilar(propId);
+        });
+    </script>
+</body>
+</html>
