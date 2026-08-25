@@ -26,27 +26,33 @@ app.secret_key = os.getenv("SECRET_KEY", "sania-house-price-secret-key")
 
 
 # ============================================================
-# MODEL AND SCALER (Optimized Memory Loading)
+# BASE DIRECTORY & PATHS
 # ============================================================
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-MODEL_PATH = os.path.join(
-    BASE_DIR,
-    "models",
-    "california_housing_model.pkl"
-)
+MODEL_PATH = os.path.join(BASE_DIR, "models", "california_housing_model.pkl")
+SCALER_PATH = os.path.join(BASE_DIR, "models", "scaler.pkl")
 
-SCALER_PATH = os.path.join(
-    BASE_DIR,
-    "models",
-    "scaler.pkl"
-)
 
-# Load trained model and scaler, then force garbage collection to save RAM
-model = joblib.load(MODEL_PATH)
-scaler = joblib.load(SCALER_PATH)
-gc.collect()
+# ============================================================
+# LAZY-LOADED ML MODELS (Prevents Serverless Timeout)
+# ============================================================
+
+model = None
+scaler = None
+
+def get_ml_models():
+    """Lazily load trained model and scaler on first request."""
+    global model, scaler
+    if model is None or scaler is None:
+        try:
+            model = joblib.load(MODEL_PATH)
+            scaler = joblib.load(SCALER_PATH)
+            gc.collect()
+        except Exception as e:
+            print(f"[EstateIQ Error] Failed loading ML model/scaler: {e}")
+    return model, scaler
 
 
 # ============================================================
@@ -68,10 +74,14 @@ FEATURE_NAMES = [
 
 
 # ============================================================
-# DATABASE SETUP
+# DATABASE SETUP (Use /tmp for Vercel Read-Only Filesystem)
 # ============================================================
 
-DATABASE = os.path.join(BASE_DIR, "users.db")
+# Use writable /tmp directory on Vercel serverless environments
+if os.environ.get("VERCEL"):
+    DATABASE = "/tmp/users.db"
+else:
+    DATABASE = os.path.join(BASE_DIR, "users.db")
 
 
 def get_db_connection():
@@ -81,25 +91,30 @@ def get_db_connection():
 
 
 def init_database():
-    conn = get_db_connection()
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL
-        )
-    """)
-    conn.commit()
-    conn.close()
+    try:
+        conn = get_db_connection()
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                email TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL
+            )
+        """)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"[EstateIQ DB Init Warning]: {e}")
 
 
-# Create database automatically
+# Initialize SQLite Database inside writable space
 init_database()
 
-# Safe initialization of Qdrant Vector Collection
+# Safe lazy-initialization check for Qdrant Vector Collection
 try:
-    vector_service.init_collection(os.path.join(BASE_DIR, "data", "properties.csv"))
+    data_csv_path = os.path.join(BASE_DIR, "data", "properties.csv")
+    if os.path.exists(data_csv_path):
+        vector_service.init_collection(data_csv_path)
 except Exception as e:
     print(f"[EstateIQ Vector DB Warning] Could not connect or initialize Qdrant: {e}")
 
@@ -221,8 +236,12 @@ def predict():
             columns=FEATURE_NAMES
         )
 
-        scaled_input = scaler.transform(input_data)
-        prediction_val = model.predict(scaled_input)[0] * 100000
+        loaded_model, loaded_scaler = get_ml_models()
+        if loaded_model is None or loaded_scaler is None:
+            raise RuntimeError("Machine Learning models failed to load.")
+
+        scaled_input = loaded_scaler.transform(input_data)
+        prediction_val = loaded_model.predict(scaled_input)[0] * 100000
 
         if prediction_val >= 1_000_000:
             formatted_price = f"${prediction_val / 1_000_000:.2f} Million"
@@ -309,7 +328,6 @@ def property_detail(property_id):
         return redirect(url_for("login"))
 
     try:
-        # Retrieve target property point from Qdrant
         records = vector_service.client.retrieve(
             collection_name="estateiq_properties",
             ids=[property_id]
@@ -321,11 +339,9 @@ def property_detail(property_id):
 
         prop_data = records[0].payload
 
-        # Price intelligence check
         analysis = calculate_match_score(prop_data, {})
         prop_data.update(analysis)
 
-        # Get recommendations
         similar = vector_service.get_similar_properties(property_id=property_id, limit=3)
 
         return render_template(
@@ -396,7 +412,7 @@ def ai_assistant():
 
 
 # ============================================================
-# RUN FLASK APPLICATION (Render Dynamic Port Binding)
+# RUN FLASK APPLICATION
 # ============================================================
 
 if __name__ == "__main__":
