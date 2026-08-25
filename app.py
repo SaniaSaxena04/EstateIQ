@@ -52,6 +52,7 @@ def get_ml_models():
             gc.collect()
         except Exception as e:
             print(f"[EstateIQ Error] Failed loading ML model/scaler: {e}")
+            raise RuntimeError(f"Pickle load failed ({type(e).__name__}): {e}")
     return model, scaler
 
 
