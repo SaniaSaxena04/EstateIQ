@@ -201,60 +201,61 @@
         <h2>Estimate any California property's value</h2>
         <p>Enter property information and let our machine learning model estimate the property's value.</p>
 
-        <form action="/predict" method="POST" novalidate>
+        <form action="/predict" method="POST">
           <div class="form-grid">
             <div class="field">
               <label for="MedInc"><span class="icon">💰</span> Median Income</label>
               <span class="hint">Median household income in tens of thousands</span>
-              <input type="number" step="any" id="MedInc" name="MedInc" required />
+              <input type="number" step="any" min="0.01" id="MedInc" name="MedInc" value="8.32" required />
             </div>
 
             <div class="field">
               <label for="HouseAge"><span class="icon">🏗️</span> House Age</label>
               <span class="hint">Age of the property, in years</span>
-              <input type="number" step="any" id="HouseAge" name="HouseAge" required />
+              <input type="number" step="any" min="0" id="HouseAge" name="HouseAge" value="41" required />
             </div>
 
             <div class="field">
               <label for="AveRooms"><span class="icon">🚪</span> Average Rooms</label>
               <span class="hint">Average number of rooms per household</span>
-              <input type="number" step="any" id="AveRooms" name="AveRooms" required />
+              <input type="number" step="any" min="0.01" id="AveRooms" name="AveRooms" value="6.98" required />
             </div>
 
             <div class="field">
               <label for="AveBedrms"><span class="icon">🛏️</span> Average Bedrooms</label>
               <span class="hint">Average number of bedrooms per household</span>
-              <input type="number" step="any" id="AveBedrms" name="AveBedrms" required />
+              <input type="number" step="any" min="0.01" id="AveBedrms" name="AveBedrms" value="1.02" required />
             </div>
 
             <div class="field">
               <label for="Population"><span class="icon">👥</span> Population</label>
               <span class="hint">Total population in the surrounding block</span>
-              <input type="number" step="any" id="Population" name="Population" required />
+              <input type="number" step="any" min="1" id="Population" name="Population" value="322" required />
             </div>
 
             <div class="field">
               <label for="AveOccup"><span class="icon">🏠</span> Average Occupants</label>
               <span class="hint">Average number of household members</span>
-              <input type="number" step="any" id="AveOccup" name="AveOccup" required />
+              <input type="number" step="any" min="0.01" id="AveOccup" name="AveOccup" value="2.55" required />
             </div>
 
             <div class="field">
               <label for="Latitude"><span class="icon">📍</span> Latitude</label>
               <span class="hint">Geographic latitude of the property</span>
-              <input type="number" step="any" id="Latitude" name="Latitude" required />
+              <input type="number" step="any" id="Latitude" name="Latitude" value="37.88" required />
             </div>
 
             <div class="field">
               <label for="Longitude"><span class="icon">🧭</span> Longitude</label>
               <span class="hint">Geographic longitude of the property</span>
-              <input type="number" step="any" id="Longitude" name="Longitude" required />
+              <input type="number" step="any" id="Longitude" name="Longitude" value="-122.23" required />
             </div>
           </div>
 
           <button type="submit" class="predict-submit">Predict Property Price →</button>
           <div class="predict-powered">Powered by Machine Learning</div>
         </form>
+</div>
 
         {% if prediction_text %}
         <div class="result-card">
