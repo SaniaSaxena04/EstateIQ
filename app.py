@@ -1,4 +1,5 @@
 import os
+import gc
 import sqlite3
 import pandas as pd
 import joblib
@@ -25,7 +26,7 @@ app.secret_key = os.getenv("SECRET_KEY", "sania-house-price-secret-key")
 
 
 # ============================================================
-# MODEL AND SCALER
+# MODEL AND SCALER (Optimized Memory Loading)
 # ============================================================
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -42,9 +43,10 @@ SCALER_PATH = os.path.join(
     "scaler.pkl"
 )
 
-# Load trained model and scaler
+# Load trained model and scaler, then force garbage collection to save RAM
 model = joblib.load(MODEL_PATH)
 scaler = joblib.load(SCALER_PATH)
+gc.collect()
 
 
 # ============================================================
@@ -394,12 +396,13 @@ def ai_assistant():
 
 
 # ============================================================
-# RUN FLASK APPLICATION
+# RUN FLASK APPLICATION (Render Dynamic Port Binding)
 # ============================================================
 
 if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
     app.run(
-        debug=True,
-        host="127.0.0.1",
-        port=5000
+        debug=False,
+        host="0.0.0.0",
+        port=port
     )
