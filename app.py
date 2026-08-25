@@ -56,24 +56,6 @@ def get_ml_models():
 
 
 # ============================================================
-# EXPECTED FEATURE COLUMNS
-# ============================================================
-
-FEATURE_NAMES = [
-    "MedInc",
-    "HouseAge",
-    "AveRooms",
-    "AveBedrms",
-    "Population",
-    "AveOccup",
-    "Latitude",
-    "Longitude",
-    "RoomsPerHousehold",
-    "BedroomsPerRoom"
-]
-
-
-# ============================================================
 # DATABASE SETUP (Use /tmp for Vercel Read-Only Filesystem)
 # ============================================================
 
@@ -227,14 +209,12 @@ def predict():
         rooms_per_household = ave_rooms / ave_occup
         bedrooms_per_room = ave_bedrms / ave_rooms
 
-        input_data = pd.DataFrame(
-            [[
-                med_inc, house_age, ave_rooms, ave_bedrms,
-                population, ave_occup, latitude, longitude,
-                rooms_per_household, bedrooms_per_room
-            ]],
-            columns=FEATURE_NAMES
-        )
+        # Raw 2D array matching the scaler's expected NumPy structure
+        input_data = [[
+            med_inc, house_age, ave_rooms, ave_bedrms,
+            population, ave_occup, latitude, longitude,
+            rooms_per_household, bedrooms_per_room
+        ]]
 
         loaded_model, loaded_scaler = get_ml_models()
         if loaded_model is None or loaded_scaler is None:
