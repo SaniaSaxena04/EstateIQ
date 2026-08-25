@@ -248,7 +248,7 @@ def predict():
         print("Prediction Error:", e)
         return render_template(
             "index.html",
-            prediction_text="Unable to calculate the house price. Please check inputs.",
+            prediction_text=f"Prediction Error Details: {e}",
             username=session.get("username"),
             email=session.get("email")
         )
